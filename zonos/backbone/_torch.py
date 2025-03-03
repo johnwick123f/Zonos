@@ -132,7 +132,10 @@ class Attention(nn.Module):
         k, v = kv.unbind(dim=-3)
 
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
-
+        print(q.dtype, k.dtype, v.dtype)
+        q = q.half()
+        k = k.half()
+        v = v.half()
         y = F.scaled_dot_product_attention(q.half(), k.half(), v.half(), is_causal=seqlen > 1, enable_gqa=True)
 
         y = y.transpose(1, 2).contiguous().view(batch_size, seqlen, q_size)
