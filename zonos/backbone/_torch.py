@@ -16,7 +16,7 @@ def precompute_freqs_cis(seq_len: int, n_elem: int, base: float = 10000) -> torc
     return cache
 
 
-def apply_rotary_emb_meh(x: torch.Tensor, freqs_cis: torch.Tensor) -> torch.Tensor:
+def apply_rotary_emb(x: torch.Tensor, freqs_cis: torch.Tensor) -> torch.Tensor:
     xshaped = x.float().reshape(*x.shape[:-1], -1, 2)
     freqs_cis = freqs_cis.view(-1, xshaped.size(1), 1, xshaped.size(3), 2)
     x_out2 = torch.stack(
@@ -29,13 +29,7 @@ def apply_rotary_emb_meh(x: torch.Tensor, freqs_cis: torch.Tensor) -> torch.Tens
 
     x_out2 = x_out2.flatten(3)
     return x_out2.type_as(x)
-    
-def apply_rotary_emb(x: torch.Tensor, freqs_cis: torch.Tensor) -> torch.Tensor:
-    x_complex = torch.view_as_complex(x.float().reshape(*x.shape[:-1], -1, 2))
-    freqs_complex = torch.view_as_complex(freqs_cis.reshape(-1, x_complex.size(1), 1, x_complex.size(3), 2))
-    x_rotated = x_complex * freqs_complex
-    x_out = torch.view_as_real(x_rotated).flatten(3)
-    return x_out.type_as(x)
+
 
 
 def _update_kv_cache(
