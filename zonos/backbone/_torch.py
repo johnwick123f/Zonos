@@ -4,6 +4,7 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 from zonos.config import BackboneConfig, InferenceParams
+from sageattention import sageattn
 
 
 def precompute_freqs_cis(seq_len: int, n_elem: int, base: float = 10000) -> torch.Tensor:
@@ -134,7 +135,8 @@ class Attention(nn.Module):
         k = k.half()
         v = v.half()
         q, k, v = map(lambda x: x.transpose(1, 2), (q, k, v))
-        y = F.scaled_dot_product_attention(q.half(), k.half(), v.half(), is_causal=seqlen > 1, enable_gqa=True)
+        y = sageattn(q.half(), k.half(), v.half(), is_causal=seqlen > 1)
+        #y = F.scaled_dot_product_attention(q.half(), k.half(), v.half(), is_causal=seqlen > 1, enable_gqa=True)
 
         y = y.transpose(1, 2).contiguous().view(batch_size, seqlen, q_size)
 
