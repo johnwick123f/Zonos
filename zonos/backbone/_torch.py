@@ -130,7 +130,6 @@ class Attention(nn.Module):
 
         kv = _update_kv_cache(k, v, inference_params, self.layer_idx)
         k, v = kv.unbind(dim=-3)
-        print(q.dtype, k.dtype, v.dtype)
         q = q.half()
         k = k.half()
         v = v.half()
