@@ -76,7 +76,7 @@ class Zonos(nn.Module):
             if is_transformer and "torch" in BACKBONES:
                 backbone_cls = BACKBONES["torch"]
 
-        model = cls(config, backbone_cls).to(device, torch.bfloat16)
+        model = cls(config, backbone_cls).to(device, torch.float16)
         model.autoencoder.dac.to(device)
 
         sd = model.state_dict()
