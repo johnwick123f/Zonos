@@ -213,7 +213,7 @@ def phonemize(texts: list[str], languages: list[str]) -> list[str]:
         phon_parts = []
         for seg in segments:
             if seg.startswith(':phonemize/') and seg.endswith('/'):
-                phon_parts.append(seg[len(':phonemize/'):-1]
+                phon_parts.append(seg[len(':phonemize/'):-1])
             elif seg:
                 backend = get_backend(language)
                 ph = backend.phonemize([seg], strip=True)
